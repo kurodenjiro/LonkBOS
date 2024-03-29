@@ -198,6 +198,18 @@ const Stake = styled.div`
         color:#ffffff;
         font-weight:600;
     }
+    .swap{
+      border:none;
+      text-align:center;
+      width:200px;
+      outline:none;
+      &::placeholder{
+        text-align:center;
+      }
+      &:focus{
+        border:none;
+      }
+    }
 `;
 
 const LONK_ICON =
@@ -212,9 +224,12 @@ return (
       <Stake>
         <div class="title">Stake $NEAR with LONK, secure the network</div>
         <div class="amount">
-          {Number(
-            getBalance("token.lonkingnearbackto2024.near", LONK_TOKEN_META)
-          ).toFixed(0)}
+          <input
+            onChange={(e) => setAmount(e.target.value)}
+            class="swap"
+            type="text"
+            placeholder="0"
+          />
         </div>
         <div class="sub-amount">
           ~
@@ -236,70 +251,12 @@ return (
             <small>Uptime: 100% APY: 10,89%</small>
           </div>
           <div>
-            <div
-              data-bs-toggle="modal"
-              data-bs-target="#modalStake"
-              class="button-stake"
-            >
+            <button onClick={onStakeClick} class="button-stake">
               Stake
-            </div>
+            </button>
           </div>
         </div>
       </Stake>
     </Container>
-    <div
-      class="modal fade"
-      id="modalStake"
-      tabindex="-1"
-      aria-labelledby="modalStake"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Stake LONK
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <input
-              type="text"
-              onChange={(e) => setAmount(e.target.value)}
-              class="px-3 py-2"
-              style={{
-                width: "100%",
-                borderRadius: "5px",
-                outline: "none",
-                background: "none",
-                border: "1px solid gray",
-              }}
-            />
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              onClick={onStakeClick}
-              type="button"
-              style={{ background: "#31cf34", border: "none" }}
-              class="btn btn-primary"
-            >
-              Stake
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </>
 );
