@@ -140,10 +140,11 @@ if (!state.timerIntervalSet) {
 }
 
 const Container = styled.div`
-  width: 430px;
-
+  width: 490px;
+background: #182733;
   color: white;
-
+padding:30px;
+border-radius:10px;
   .swap-title {
     font-size: 20px;
     font-weight: 700;

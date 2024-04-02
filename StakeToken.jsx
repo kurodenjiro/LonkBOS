@@ -1,4 +1,4 @@
-const accountId = context.accountId;
+const accountId = props.accountId;
 const shrinkToken = (value, decimals) => {
   return new Big(value || 0).div(new Big(10).pow(decimals || 24));
 };
@@ -8,17 +8,19 @@ const expandToken = (value, decimals) => {
 };
 const [amount, setAmount] = useState("");
 const onStakeClick = () => {
-  const gas = 300 * 1000000000000;
-  // TODO: doesn't support floats right now due to limitation of JS integers
-  const deposit = Big(amount).mul(Big(10).pow(8)).toFixed(0);
-  console.log(gas, deposit);
-  Near.call(
-    "lonk_validator.poolv1.near",
-    "deposit_and_stake",
-    {},
-    gas,
-    deposit
-  );
+  if (accountId) {
+    const gas = 300 * 1000000000000;
+    // TODO: doesn't support floats right now due to limitation of JS integers
+    const deposit = Big(amount).mul(Big(10).pow(24)).toFixed(0);
+    console.log(gas, deposit);
+    Near.call(
+      "lonk_validator.poolv1.near",
+      "deposit_and_stake",
+      {},
+      gas,
+      deposit
+    );
+  }
 };
 
 const account = fetch("https://rpc.mainnet.near.org", {
@@ -56,6 +58,13 @@ const LONK_TOKEN_META = {
   name: "LONK fungible token",
   symbol: "LONK",
 };
+const NEAR_META = {
+  decimals: 24,
+  icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMTcuNSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz4KPGNpcmNsZSBjeD0iMTgiIGN5PSIxOCIgcj0iMTcuNSIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC42MDc4IDEyLjUwMjlWMjMuNjE5M0wxNi4yOTIgMTkuMzcyMUwxNi44NjA0IDE5Ljg3MDZMMTIuMDkzOCAyNi41ODQ0QzEwLjMyMjggMjguMjA5MiA3LjE5NzI3IDI3LjEwOTkgNy4xOTcyNyAyNC44NjIyVjExLjEzNzFDNy4xOTcyNyA4LjgxMjI4IDEwLjUwNTggNy43NTMzNCAxMi4yMTMzIDkuNTMxNkwyNS4zODY3IDIzLjI1MDRWMTIuNTkwMkwyMC4yNzEgMTYuMzgxMkwxOS43MDI1IDE1Ljg4MjdMMjMuNzU2NyA5LjYxNTZDMjUuNDQ4OSA3LjgwNDQyIDI4Ljc5NzMgOC44NTM3NiAyOC43OTczIDExLjE5NTNWMjQuNjE2M0MyOC43OTczIDI2Ljk0MTEgMjUuNDg4OCAyOCAyMy43ODEyIDI2LjIyMThMMTAuNjA3OCAxMi41MDI5WiIgZmlsbD0iIzBGMUQyNyIvPgo8L3N2Zz4K",
+  id: "NEAR",
+  name: "NEAR",
+  symbol: "NEAR",
+};
 
 const getBalance = (token_id, tokenMeta) => {
   let amount;
@@ -81,7 +90,6 @@ const Container = styled.div`
     padding:10px 0;
     align-items:center;
     border-top:2px solid #31cf34;
-    border-bottom:2px solid #31cf34;
     @media screen and (max-width:768px){
         flex-direction:column;
         justify-content:center;
@@ -232,15 +240,10 @@ return (
           />
         </div>
         <div class="sub-amount">
-          ~
-          {Number(getBalanceNum("token.lonkingnearbackto2024.near")).toFixed(8)}{" "}
-          USD
+          ~{Number(getBalanceNum("NEAR")).toFixed(3)} USD
         </div>
         <div class="available">
-          Available:{" "}
-          {Number(
-            getBalance("token.lonkingnearbackto2024.near", LONK_TOKEN_META)
-          ).toFixed(2)}
+          Available: {Number(getBalance("NEAR", NEAR_META)).toFixed(2)}
         </div>
         <div class="footer">
           <div class="avatar">
@@ -251,12 +254,42 @@ return (
             <small>Uptime: 100% APY: 10,89%</small>
           </div>
           <div>
-            <button onClick={onStakeClick} class="button-stake">
+            <button
+              onClick={onStakeClick}
+              data-bs-toggle="modal"
+              data-bs-target="#stake"
+              class="button-stake"
+            >
               Stake
             </button>
           </div>
         </div>
       </Stake>
     </Container>
+    {!accountId && (
+      <div
+        class="modal fade"
+        id="stake"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div
+              class="modal-body d-flex justify-content-center align-items-center"
+              style={{
+                fontWeight: "600",
+                backgroundColor: "#31cf34",
+                color: "#fff",
+                fontFamily: `${fondKod}`,
+              }}
+            >
+              <Content>Please connect wallet!</Content>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
   </>
 );
