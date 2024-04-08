@@ -93,7 +93,6 @@ const loadBalance = () => {
               lonkBalance = token.balance;
             }
           }
-          console.log(lonkBalance);
           const getBalance = (token_id, tokenMeta) => {
             let amount;
 
@@ -218,14 +217,6 @@ const canSwap =
   !state.loading &&
   Number(state.slippagetolerance) > 0;
 
-const register = Near.view(
-  state.tokenOut.id === "NEAR" ? "wrap.near" : state.tokenOut.id,
-  "storage_balance_of",
-  {
-    account_id: accountId,
-  }
-);
-
 const callTx = () => {
   const tx = [];
 
@@ -253,7 +244,13 @@ const callTx = () => {
 
     return Near.call(tx);
   }
-
+  const register = Near.view(
+    state.tokenOut.id === "NEAR" ? "wrap.near" : state.tokenOut.id,
+    "storage_balance_of",
+    {
+      account_id: accountId,
+    }
+  );
   if (register === null) {
     tx.push({
       contractName:
