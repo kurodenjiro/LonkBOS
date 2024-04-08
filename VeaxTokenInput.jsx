@@ -61,35 +61,30 @@ const TokenWrapper = styled.div`
   margin-left:-10px;
   clip-path: polygon(0 0,100% 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
 `;
-
 const Icon = styled.img`
   height: 26px;
   width: 26px;
   border-radius: 100%;
 `;
+const BalanceWrapper = styled.div`
+  color: #7c7f96;
+  font-size: 12px;
+  margin-left: 8px;
+  padding-top: 4px;
+  display: flex;
+  justify-content: space-between;
+`;
 
+const Wrapper = styled.div`
+  position: relative;
+  margin-top: 8px;
+
+`;
 const Symbol = styled.span`
   margin-right: 8px;
   margin-left: 8px;
   font-size: 18px;
 `;
-
-const account = fetch("https://rpc.mainnet.near.org", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    jsonrpc: "2.0",
-    id: "dontcare",
-    method: "query",
-    params: {
-      request_type: "view_account",
-      finality: "final",
-      account_id: accountId,
-    },
-  }),
-});
 
 // 新增接口
 const accountNum = JSON.parse(
@@ -113,29 +108,18 @@ const formatTokenBig = (v, decimals) =>
   Math.floor(v * Math.pow(10, Math.min(decimals, 8))) /
   Math.pow(10, Math.min(decimals, 8));
 
-const getBalance = (token_id) => {
-  let amount;
-
-  if (!accountId) {
-    return "-";
-  }
-
-  if (token_id === "NEAR") amount = account.body.result.amount;
-  else {
-    amount = Near.view(token_id, "ft_balance_of", {
-      account_id: accountId,
-    });
-  }
-
-  return !!amount
-    ? formatToken(shrinkToken(amount, props.token.decimals))
-    : "-";
-};
-
-const { amount, setAmount, handleSelect, disableInput, inputOnChange } = props;
+const {
+  amount,
+  setAmount,
+  handleSelect,
+  disableInput,
+  inputOnChange,
+  balance,
+} = props;
 
 State.init({
   show: false,
+  balance: balance,
   handleClose: () => {
     State.update({
       show: false,
@@ -147,21 +131,6 @@ State.init({
     });
   },
 });
-
-const BalanceWrapper = styled.div`
-  color: #7c7f96;
-  font-size: 12px;
-  margin-left: 8px;
-  padding-top: 4px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Wrapper = styled.div`
-  position: relative;
-  margin-top: 8px;
-
-`;
 
 const SelectToken = (
   <Widget
@@ -211,7 +180,7 @@ return (
           props.token.decimals
         )}
       </div>
-      <div>Balance: {accountId ? getBalance(props.token.id) : "-"}</div>
+      <div>Balance: {accountId ? balance : "-"}</div>
     </BalanceWrapper>
 
     {SelectToken}

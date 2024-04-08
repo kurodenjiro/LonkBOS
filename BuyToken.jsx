@@ -55,6 +55,8 @@ font-family: Kodchasan,sans-serif;
 }
 }
 `;
+const accountId = context.accountId;
+console.log(accountId);
 return (
   <>
     <div class="how font-md-bigger py-4 py-lg-5" id="how">
@@ -240,31 +242,64 @@ return (
       </div>
     </div>
 
-    <div
-      class="modal fade"
-      id="buyModal"
-      tabindex="-1"
-      aria-labelledby="buyModal"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Swap Token Ref Finance
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body d-flex justify-content-center align-items-center">
-            <Widget src="huunhanz.near/widget/ref-swap" />
+    {accountId ? (
+      <div
+        class="modal fade"
+        id="buyModal"
+        tabindex="-1"
+        aria-labelledby="buyModal"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div
+              class="modal-header"
+              style={{ background: "#182733", color: "#fff" }}
+            >
+              <h5 class="modal-title" id="exampleModalLabel">
+                Swap Token Ref Finance
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                style={{ filter: "brightness(0) invert(1)" }}
+              ></button>
+            </div>
+            <div
+              style={{ background: "#182733" }}
+              class="modal-body d-flex justify-content-center align-items-center"
+            >
+              <Widget src="louisdevzz.near/widget/ref-swap" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    ) : (
+      <div
+        class={`modal fade`}
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div
+              class="modal-body d-flex justify-content-center align-items-center"
+              style={{
+                fontWeight: "600",
+                backgroundColor: "#31cf34",
+                color: "#fff",
+                fontFamily: `${fondKod}`,
+              }}
+            >
+              <Content>Please connect wallet!</Content>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
   </>
 );
