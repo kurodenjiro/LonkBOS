@@ -204,7 +204,7 @@ return (
         </div>
       </div>
     </div>
-    {accountId && state.isShow ? (
+    {accountId ? (
       state.select == "ref" ? (
         <div
           class="modal fade"
@@ -234,7 +234,9 @@ return (
                 style={{ background: "#182733" }}
                 class="modal-body d-flex justify-content-center align-items-center"
               >
-                <Widget src="louisdevzz.near/widget/ref-swap" />
+                {state.isShow && (
+                  <Widget src="kurodenjiro.near/widget/ref-swap" />
+                )}
               </div>
             </div>
           </div>
@@ -268,7 +270,9 @@ return (
                 style={{ background: "#282828" }}
                 class="d-flex justify-content-center align-items-center"
               >
-                <Widget src="louisdevzz.near/widget/Lonk.veax-swap" />
+                {state.isShow && (
+                  <Widget src="louisdevzz.near/widget/Lonk.veax-swap" />
+                )}
               </div>
             </div>
           </div>
