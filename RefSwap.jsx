@@ -334,7 +334,22 @@ const inputOnChange = (e) => {
 return (
   <Container>
     <div className="swap-title">Swap</div>
-    {}
+    {
+      <Widget
+      src="weige.near/widget/ref-swap-getEstimate"
+      props={{
+        loadRes: state.loadRes,
+        tokenIn: state.tokenIn,
+        tokenOut: state.tokenOut,
+        amountIn: state.amountIn || 0,
+        reloadPools: state.reloadPools,
+        setReloadPools: (value) =>
+          State.update({
+            reloadPools: value,
+          }),
+      }}
+    />
+    }
 
     {
       <Widget
