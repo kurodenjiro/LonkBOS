@@ -93,7 +93,6 @@ const loadBalance = () => {
               lonkBalance = token.balance;
             }
           }
-          console.log(lonkBalance);
           const getBalance = (token_id, tokenMeta) => {
             let amount;
 
@@ -218,14 +217,6 @@ const canSwap =
   !state.loading &&
   Number(state.slippagetolerance) > 0;
 
-const register = Near.view(
-  state.tokenOut.id === "NEAR" ? "wrap.near" : state.tokenOut.id,
-  "storage_balance_of",
-  {
-    account_id: accountId,
-  }
-);
-
 const callTx = () => {
   const tx = [];
 
@@ -253,7 +244,13 @@ const callTx = () => {
 
     return Near.call(tx);
   }
-
+  const register = Near.view(
+    state.tokenOut.id === "NEAR" ? "wrap.near" : state.tokenOut.id,
+    "storage_balance_of",
+    {
+      account_id: accountId,
+    }
+  );
   if (register === null) {
     tx.push({
       contractName:
@@ -337,22 +334,7 @@ const inputOnChange = (e) => {
 return (
   <Container>
     <div className="swap-title">Swap</div>
-    {
-      <Widget
-        src="weige.near/widget/ref-swap-getEstimate"
-        props={{
-          loadRes: state.loadRes,
-          tokenIn: state.tokenIn,
-          tokenOut: state.tokenOut,
-          amountIn: state.amountIn || 0,
-          reloadPools: state.reloadPools,
-          setReloadPools: (value) =>
-            State.update({
-              reloadPools: value,
-            }),
-        }}
-      />
-    }
+    {}
 
     {
       <Widget
@@ -414,11 +396,13 @@ return (
     <Widget
       src={`weige.near/widget/SlippageTolerance`}
       props={{
+        reloadPools: false,
         showSetting: state.showSetting,
         updateSetting: () =>
           State.update({
             showSetting: !state.showSetting,
           }),
+
         slippagetolerance: state.slippagetolerance,
         setSlippagetolerance: (value) => {
           if (value !== "" && !value.match(/^\d*(\.\d*)?$/)) {
